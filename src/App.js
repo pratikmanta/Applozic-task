@@ -39,9 +39,9 @@ class App extends Component {
     this.setState({
       tasklist: listArray,
     }, () => {
+      this.toggleInputBox()
       localStorage.setItem('tasklist', JSON.stringify(this.state.tasklist));
     });
-    this.toggleInputBox();
   }
 
   handleDone = (data) => {
@@ -75,6 +75,7 @@ class App extends Component {
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.addTask();
+      this.toggleInputBox()
     }
   }
 
@@ -108,7 +109,7 @@ class App extends Component {
         {this.state.isOpen ?
           <div className="m-2 p-3">
             <div className="form-group ml-4">
-              <input className="form-control" onChange={this.handleInputChange} onKeyPress={this.handleKeyPress} autoFocus />
+              <input className="form-control" onChange={this.handleInputChange} onBlur={this.toggleInputBox} onKeyPress={this.handleKeyPress} autoFocus />
             </div>
           </div>
           : null
