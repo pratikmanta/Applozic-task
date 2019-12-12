@@ -15,7 +15,7 @@ class App extends Component {
   componentDidMount() {
     const list = localStorage.getItem('tasklist');
     const parsedList = JSON.parse(list);
-    if(list == null || list == undefined){
+    if (list === null || list === undefined) {
       return false
     }
     else {
@@ -32,14 +32,14 @@ class App extends Component {
     
     listArray.push({
       id: listArray.length,
-      content:this.state.value
+      content: this.state.value,
+      checked: false
     });
 
     this.setState({
       tasklist: listArray,
-      value: this.state.value
     }, () => {
-        localStorage.setItem('tasklist', JSON.stringify(this.state.tasklist));
+      localStorage.setItem('tasklist', JSON.stringify(this.state.tasklist));
     });
     this.toggleInputBox();
   }
