@@ -44,6 +44,30 @@ class App extends Component {
     this.toggleInputBox();
   }
 
+  handleDone = (data) => {
+    this.setState((prevState) => {
+      return {
+        tasklist: prevState.tasklist.map(task => {
+          if (task.id === data.id) {
+            return { ...task, checked: !data.checked };
+          } else {
+            return task;
+          }
+        }),
+      };
+    }, () => {
+      localStorage.setItem('tasklist', JSON.stringify(this.state.tasklist));
+    });
+  }
+
+  removeTask = (data) => {
+    var selected_task = this.state.tasklist.filter(el => el.id !== data.id)
+    this.setState({ tasklist: selected_task }, () => {
+      localStorage.setItem('tasklist', JSON.stringify(this.state.tasklist));
+    })
+
+  }
+
   toggleInputBox = () => {
     this.setState(prevState => ({ isOpen: !prevState.isOpen }));
   }
@@ -56,7 +80,7 @@ class App extends Component {
 
   render() {
     const { tasklist } = this.state;
-    
+
     return (
       <div className="m-4 p-4">
         <nav className="navbar navbar-light text-warning border-bottom ">
@@ -70,8 +94,11 @@ class App extends Component {
             {
               tasklist.map((task, index) => {
                 return (
-                  <li key={index} className="row text-warning m-2 p-3 border-bottom">
-                    <TaskItem task={task} handleEnter={this.handleKeyPress} />
+                  <li key={index} className="d-flex justify-content-between align-items-center text-warning m-2 p-3 border-bottom">
+                    <TaskItem task={task} handleEnter={this.handleKeyPress} handleDone={this.handleDone} color={this.state.color} />
+                    <span style={styles.icon} onClick={() => this.removeTask(task)}>
+                      <i className="text-danger fa fa-close"></i>
+                    </span>
                   </li>
                 )
               })
@@ -95,7 +122,14 @@ const styles = {
   buttonStyle: {
     fontSize: '4em',
     cursor: 'pointer',
-  }
+  },
+  icon: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 20px 0 0',
+    fontSize: '2.5em',
+    cursor: 'pointer',
+  },
 }
 
 export default App;

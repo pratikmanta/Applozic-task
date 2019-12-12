@@ -1,25 +1,24 @@
 import React from 'react';
 
-const TaskItem = ({ task }) => {
+const TaskItem = ({ task, handleDone }) => {
 
   return (
     <>
-      <div style={styles.icon}>
-        <i className="fa fa-circle"></i>
+      <div style={styles.iconText} onClick={() => handleDone(task)}>
+        <i className={task.checked ? "fa fa-check text-success pr-3":"fa fa-circle pr-3"}></i>
+        <h3>{task.content}</h3>
       </div>
-      <h3>{task.content}</h3>
     </>
   )
 }
 
 const styles = {
-  icon: {
+  iconText: {
     display: 'flex',
     alignItems: 'center',
-    padding: '0 20px 10px 0',
     fontSize: '2.5em',
     cursor: 'pointer',
-  }
+  },
 };
 
 export default TaskItem;
