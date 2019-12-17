@@ -29,21 +29,24 @@ class App extends Component {
 
   addTask = () => {
     var listArray = this.state.tasklist;
-    
-    listArray.push({
-      id: listArray.length,
-      content: this.state.value,
-      checked: false
-    });
-
-    this.setState({
-      tasklist: listArray,
-    }, () => {
-      this.toggleInputBox()
-      localStorage.setItem('tasklist', JSON.stringify(this.state.tasklist));
-    });
+    if(listArray.length >= 0 && this.state.value !== "") { 
+      listArray.push({
+        id: listArray.length,
+        content: this.state.value,
+        checked: false
+      });
+      console.log('List',listArray)
+      this.setState({
+        tasklist: listArray,
+      }, () => {
+        this.toggleInputBox()
+        localStorage.setItem('tasklist', JSON.stringify(this.state.tasklist));
+      });
+    }
+    else {
+      return null;
+    } 
   }
-
   handleDone = (data) => {
     this.setState((prevState) => {
       return {
@@ -69,14 +72,14 @@ class App extends Component {
   }
 
   toggleInputBox = () => {
-    this.setState(prevState => ({ isOpen: !prevState.isOpen }));
+    this.setState(prevState => ({ isOpen: !prevState.isOpen, value: ""}));
   }
 
-  handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      this.addTask();
-      this.toggleInputBox()
-    }
+  handleEnterClick = (e) => {
+    if (e.keyCode === 13) {
+        this.addTask()
+        this.toggleInputBox()
+      } 
   }
 
   render() {
@@ -96,7 +99,7 @@ class App extends Component {
               tasklist.map((task, index) => {
                 return (
                   <li key={index} className="d-flex justify-content-between align-items-center text-warning m-2 p-3 border-bottom">
-                    <TaskItem task={task} handleEnter={this.handleKeyPress} handleDone={this.handleDone} color={this.state.color} />
+                    <TaskItem task={task} handleDone={this.handleDone} color={this.state.color}/>
                     <span style={styles.icon} onClick={() => this.removeTask(task)}>
                       <i className="text-danger fa fa-close"></i>
                     </span>
@@ -109,7 +112,7 @@ class App extends Component {
         {this.state.isOpen ?
           <div className="m-2 p-3">
             <div className="form-group ml-4">
-              <input className="form-control" onChange={this.handleInputChange} onBlur={this.toggleInputBox} onKeyPress={this.handleKeyPress} autoFocus />
+              <input className="form-control" onChange={this.handleInputChange} onBlur={this.toggleInputBox} onKeyUp={(e) => this.handleEnterClick(e)} autoFocus />
             </div>
           </div>
           : null
